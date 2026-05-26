@@ -1,0 +1,497 @@
+# File HTML Aplikasi Bank Sampah Digital Versi Admin & Nasabah
+
+Versi ini telah ditambahkan:
+
+* Login Admin
+* Login Nasabah
+* Upload & ganti logo
+* Tambah/edit/hapus jenis sampah
+* Tambah akun nasabah
+* Rekap tabungan nasabah
+* Data tersimpan otomatis di browser
+
+## Login Admin
+
+* Username: `admin`
+* Password: `admin123`
+
+## Cara Menggunakan
+
+1. Salin seluruh kode di bawah
+2. Simpan dengan nama `index.html`
+3. Buka di browser HP atau laptop
+
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Sampah Digital</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f1f5f9;
+}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="min-h-screen flex items-center justify-center bg-green-700 p-5">
+<div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8">
+
+<div class="text-center mb-6">
+<img id="previewLogo" src="https://cdn-icons-png.flaticon.com/512/679/679720.png" class="w-24 h-24 mx-auto mb-3 rounded-full object-cover">
+<h1 class="text-3xl font-bold text-green-700">BANK SAMPAH</h1>
+<p class="text-gray-500">Login Sistem</p>
+</div>
+
+<input type="text" id="username" placeholder="Username" class="w-full border p-3 rounded-xl mb-3">
+<input type="password" id="password" placeholder="Password" class="w-full border p-3 rounded-xl mb-5">
+
+<button onclick="login()" class="w-full bg-green-700 hover:bg-green-800 text-white p-3 rounded-xl font-bold">
+LOGIN
+</button>
+
+<div class="mt-5 text-sm text-gray-500">
+<p><b>Admin:</b> admin / admin123</p>
+</div>
+
+</div>
+</div>
+
+<div id="app" class="hidden">
+
+<header class="bg-green-700 text-white p-4 shadow-lg">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-3">
+<img id="headerLogo" src="https://cdn-icons-png.flaticon.com/512/679/679720.png" class="w-16 h-16 rounded-full object-cover bg-white p-1">
+<div>
+<h1 class="text-2xl font-bold">BANK SAMPAH DIGITAL</h1>
+<p id="roleText">Dashboard</p>
+</div>
+</div>
+
+<div class="flex flex-wrap gap-2">
+<button onclick="showPage('dashboard')" class="bg-white text-green-700 px-3 py-2 rounded-xl font-bold">Dashboard</button>
+<button onclick="showPage('nasabahPage')" id="menuNasabah" class="bg-white text-green-700 px-3 py-2 rounded-xl font-bold">Nasabah</button>
+<button onclick="showPage('jenisPage')" id="menuJenis" class="bg-white text-green-700 px-3 py-2 rounded-xl font-bold">Jenis Sampah</button>
+<button onclick="showPage('transaksiPage')" class="bg-white text-green-700 px-3 py-2 rounded-xl font-bold">Penimbangan</button>
+<button onclick="showPage('tabunganPage')" class="bg-white text-green-700 px-3 py-2 rounded-xl font-bold">Tabungan</button>
+<button onclick="logout()" class="bg-red-500 text-white px-3 py-2 rounded-xl font-bold">Logout</button>
+</div>
+</div>
+</header>
+
+<section id="dashboard" class="p-5">
+<h2 class="text-3xl font-bold text-green-700 mb-5">Dashboard</h2>
+
+<div class="grid md:grid-cols-4 gap-4">
+<div class="bg-white p-5 rounded-2xl shadow-lg">
+<h3>Total Nasabah</h3>
+<p id="totalNasabah" class="text-4xl font-bold text-green-700">0</p>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg">
+<h3>Total Transaksi</h3>
+<p id="totalTransaksi" class="text-4xl font-bold text-blue-700">0</p>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg">
+<h3>Total Berat</h3>
+<p id="totalBerat" class="text-4xl font-bold text-yellow-600">0 Kg</p>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg">
+<h3>Total Saldo</h3>
+<p id="totalSaldo" class="text-3xl font-bold text-red-600">Rp0</p>
+</div>
+</div>
+
+<div id="logoAdminArea" class="bg-white rounded-2xl shadow-lg p-5 mt-5">
+<h3 class="text-2xl font-bold text-green-700 mb-4">Pengaturan Logo</h3>
+<input type="file" onchange="gantiLogo(event)" class="border p-3 rounded-xl">
+</div>
+</section>
+
+<section id="nasabahPage" class="hidden p-5">
+<h2 class="text-3xl font-bold text-green-700 mb-5">Data Nasabah</h2>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg mb-5">
+<div class="grid md:grid-cols-4 gap-4">
+<input type="text" id="namaNasabah" placeholder="Nama" class="border p-3 rounded-xl">
+<input type="text" id="alamatNasabah" placeholder="Alamat" class="border p-3 rounded-xl">
+<input type="text" id="userNasabah" placeholder="Username" class="border p-3 rounded-xl">
+<input type="password" id="passNasabah" placeholder="Password" class="border p-3 rounded-xl">
+</div>
+
+<button onclick="tambahNasabah()" class="mt-4 bg-green-700 text-white px-5 py-3 rounded-xl font-bold">
+Tambah Nasabah
+</button>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg overflow-auto">
+<table class="w-full">
+<thead class="bg-green-700 text-white">
+<tr>
+<th class="p-3">Nama</th>
+<th class="p-3">Username</th>
+<th class="p-3">Saldo</th>
+<th class="p-3">Aksi</th>
+</tr>
+</thead>
+<tbody id="tableNasabah"></tbody>
+</table>
+</div>
+</section>
+
+<section id="jenisPage" class="hidden p-5">
+<h2 class="text-3xl font-bold text-green-700 mb-5">Jenis Sampah</h2>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg mb-5">
+<div class="grid md:grid-cols-2 gap-4">
+<input type="text" id="namaJenis" placeholder="Nama Jenis Sampah" class="border p-3 rounded-xl">
+<input type="number" id="hargaJenis" placeholder="Harga per Kg" class="border p-3 rounded-xl">
+</div>
+<button onclick="tambahJenis()" class="mt-4 bg-green-700 text-white px-5 py-3 rounded-xl font-bold">Tambah Jenis</button>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg overflow-auto">
+<table class="w-full">
+<thead class="bg-green-700 text-white">
+<tr>
+<th class="p-3">Jenis</th>
+<th class="p-3">Harga</th>
+<th class="p-3">Aksi</th>
+</tr>
+</thead>
+<tbody id="tableJenis"></tbody>
+</table>
+</div>
+</section>
+
+<section id="transaksiPage" class="hidden p-5">
+<h2 class="text-3xl font-bold text-green-700 mb-5">Penimbangan Sampah</h2>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg mb-5">
+<div class="grid md:grid-cols-3 gap-4">
+<select id="pilihNasabah" class="border p-3 rounded-xl"></select>
+<select id="pilihJenis" class="border p-3 rounded-xl"></select>
+<input type="number" id="berat" placeholder="Berat Kg" class="border p-3 rounded-xl">
+</div>
+<button onclick="tambahTransaksi()" class="mt-4 bg-green-700 text-white px-5 py-3 rounded-xl font-bold">Simpan Transaksi</button>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow-lg overflow-auto">
+<table class="w-full">
+<thead class="bg-green-700 text-white">
+<tr>
+<th class="p-3">Nama</th>
+<th class="p-3">Jenis</th>
+<th class="p-3">Berat</th>
+<th class="p-3">Total</th>
+</tr>
+</thead>
+<tbody id="tableTransaksi"></tbody>
+</table>
+</div>
+</section>
+
+<section id="tabunganPage" class="hidden p-5">
+<h2 class="text-3xl font-bold text-green-700 mb-5">Tabungan</h2>
+<div class="bg-white p-5 rounded-2xl shadow-lg overflow-auto">
+<table class="w-full">
+<thead class="bg-green-700 text-white">
+<tr>
+<th class="p-3">Nama</th>
+<th class="p-3">Saldo</th>
+<th class="p-3">Total Berat</th>
+</tr>
+</thead>
+<tbody id="tableTabungan"></tbody>
+</table>
+</div>
+</section>
+
+</div>
+
+<script>
+
+let currentUser=null;
+
+let nasabah = JSON.parse(localStorage.getItem('nasabah')) || [];
+let transaksi = JSON.parse(localStorage.getItem('transaksi')) || [];
+let jenisSampah = JSON.parse(localStorage.getItem('jenisSampah')) || [
+{name:'Plastik',harga:3000},
+{name:'Kardus',harga:2500},
+{name:'Botol',harga:4000}
+];
+
+const logo = localStorage.getItem('logoBank');
+if(logo){
+document.getElementById('previewLogo').src=logo;
+document.getElementById('headerLogo').src=logo;
+}
+
+function saveData(){
+localStorage.setItem('nasabah',JSON.stringify(nasabah));
+localStorage.setItem('transaksi',JSON.stringify(transaksi));
+localStorage.setItem('jenisSampah',JSON.stringify(jenisSampah));
+}
+
+function login(){
+const u=document.getElementById('username').value;
+const p=document.getElementById('password').value;
+
+if(u==='admin' && p==='admin123'){
+currentUser='admin';
+document.getElementById('loginPage').classList.add('hidden');
+document.getElementById('app').classList.remove('hidden');
+document.getElementById('roleText').innerText='Login sebagai Admin';
+renderAll();
+return;
+}
+
+const userNasabah=nasabah.find(n=>n.username===u && n.password===p);
+
+if(userNasabah){
+currentUser=userNasabah.username;
+document.getElementById('loginPage').classList.add('hidden');
+document.getElementById('app').classList.remove('hidden');
+document.getElementById('roleText').innerText='Login sebagai Nasabah';
+
+// sembunyikan menu admin
+
+document.getElementById('menuNasabah').style.display='none';
+document.getElementById('menuJenis').style.display='none';
+document.getElementById('logoAdminArea').style.display='none';
+showNasabahView(userNasabah.username);
+renderAll();
+return;
+}
+
+alert('Login gagal');
+}
+
+function logout(){
+location.reload();
+}
+
+function showPage(id){
+document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+}
+
+function rupiah(n){
+return 'Rp'+n.toLocaleString('id-ID');
+}
+
+function gantiLogo(event){
+const file=event.target.files[0];
+const reader=new FileReader();
+reader.onload=function(e){
+localStorage.setItem('logoBank',e.target.result);
+document.getElementById('previewLogo').src=e.target.result;
+document.getElementById('headerLogo').src=e.target.result;
+}
+reader.readAsDataURL(file);
+}
+
+function tambahNasabah(){
+const nama=document.getElementById('namaNasabah').value;
+const alamat=document.getElementById('alamatNasabah').value;
+const username=document.getElementById('userNasabah').value;
+const password=document.getElementById('passNasabah').value;
+
+nasabah.push({nama,alamat,username,password,saldo:0});
+saveData();
+renderNasabah();
+}
+
+function hapusNasabah(i){
+if(confirm('Hapus nasabah?')){
+nasabah.splice(i,1);
+saveData();
+renderNasabah();
+}
+}
+
+function renderNasabah(){
+let html='';
+let option='';
+
+nasabah.forEach((n,i)=>{
+html+=`
+<tr class="border-b">
+<td class="p-3">${n.nama}</td>
+<td class="p-3">${n.username}</td>
+<td class="p-3">${rupiah(n.saldo)}</td>
+<td class="p-3">
+<button onclick="hapusNasabah(${i})" class="bg-red-500 text-white px-3 py-1 rounded">Hapus</button>
+</td>
+</tr>
+`;
+
+option+=`<option value="${i}">${n.nama}</option>`;
+});
+
+document.getElementById('tableNasabah').innerHTML=html;
+document.getElementById('pilihNasabah').innerHTML=option;
+}
+
+function tambahJenis(){
+const nama=document.getElementById('namaJenis').value;
+const harga=document.getElementById('hargaJenis').value;
+
+jenisSampah.push({name:nama,harga:parseInt(harga)});
+saveData();
+renderJenis();
+}
+
+function editJenis(i){
+const hargaBaru=prompt('Masukkan harga baru',jenisSampah[i].harga);
+if(hargaBaru){
+jenisSampah[i].harga=parseInt(hargaBaru);
+saveData();
+renderJenis();
+}
+}
+
+function hapusJenis(i){
+if(confirm('Hapus jenis sampah?')){
+jenisSampah.splice(i,1);
+saveData();
+renderJenis();
+}
+}
+
+function renderJenis(){
+let html='';
+let option='';
+
+jenisSampah.forEach((j,i)=>{
+html+=`
+<tr class="border-b">
+<td class="p-3">${j.name}</td>
+<td class="p-3">${rupiah(j.harga)}</td>
+<td class="p-3 flex gap-2">
+<button onclick="editJenis(${i})" class="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
+<button onclick="hapusJenis(${i})" class="bg-red-500 text-white px-3 py-1 rounded">Hapus</button>
+</td>
+</tr>
+`;
+
+option+=`<option value="${i}">${j.name} - ${rupiah(j.harga)}</option>`;
+});
+
+document.getElementById('tableJenis').innerHTML=html;
+document.getElementById('pilihJenis').innerHTML=option;
+}
+
+function tambahTransaksi(){
+const n=document.getElementById('pilihNasabah').value;
+const j=document.getElementById('pilihJenis').value;
+const berat=parseFloat(document.getElementById('berat').value);
+
+const total=berat*jenisSampah[j].harga;
+
+transaksi.push({
+username:nasabah[n].username,
+nama:nasabah[n].nama,
+jenis:jenisSampah[j].name,
+berat,
+total
+});
+
+nasabah[n].saldo+=total;
+
+saveData();
+renderTransaksi();
+renderDashboard();
+renderTabungan();
+}
+
+function renderTransaksi(){
+let html='';
+
+let data=transaksi;
+
+if(currentUser!=='admin'){
+data=transaksi.filter(t=>t.username===currentUser);
+}
+
+data.forEach(t=>{
+html+=`
+<tr class="border-b">
+<td class="p-3">${t.nama}</td>
+<td class="p-3">${t.jenis}</td>
+<td class="p-3">${t.berat} Kg</td>
+<td class="p-3">${rupiah(t.total)}</td>
+</tr>
+`;
+});
+
+document.getElementById('tableTransaksi').innerHTML=html;
+}
+
+function renderTabungan(){
+let html='';
+
+let data=nasabah;
+
+if(currentUser!=='admin'){
+data=nasabah.filter(n=>n.username===currentUser);
+}
+
+data.forEach(n=>{
+const totalBerat=transaksi.filter(t=>t.username===n.username).reduce((a,b)=>a+b.berat,0);
+
+html+=`
+<tr class="border-b">
+<td class="p-3">${n.nama}</td>
+<td class="p-3">${rupiah(n.saldo)}</td>
+<td class="p-3">${totalBerat} Kg</td>
+</tr>
+`;
+});
+
+document.getElementById('tableTabungan').innerHTML=html;
+}
+
+function renderDashboard(){
+
+document.getElementById('totalNasabah').innerText=nasabah.length;
+document.getElementById('totalTransaksi').innerText=transaksi.length;
+
+let berat=0;
+let saldo=0;
+
+transaksi.forEach(t=>{
+berat+=t.berat;
+saldo+=t.total;
+});
+
+document.getElementById('totalBerat').innerText=berat+' Kg';
+document.getElementById('totalSaldo').innerText=rupiah(saldo);
+}
+
+function showNasabahView(user){
+document.getElementById('nasabahPage').style.display='none';
+document.getElementById('jenisPage').style.display='none';
+}
+
+function renderAll(){
+renderNasabah();
+renderJenis();
+renderTransaksi();
+renderTabungan();
+renderDashboard();
+}
+
+</script>
+
+</body>
+</html>
+```
